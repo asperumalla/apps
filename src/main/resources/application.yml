@@ -1,0 +1,76 @@
+server:
+  port: ${PORT:8090}  # Cloud platforms set PORT automatically
+
+spring:
+  application:
+    name: payment-service
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+  
+  # Database configuration
+  # Supports both DATABASE_URL (cloud platforms) and individual variables
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}}
+    username: ${POSTGRES_USER:myuser}
+    password: ${POSTGRES_PASSWORD:mypassword}
+    driver-class-name: org.postgresql.Driver
+    # Note: If DATABASE_URL is provided (format: postgresql://user:pass@host:port/dbname),
+    # Spring Boot will parse it automatically. Individual variables are fallback.
+  
+  # Liquibase configuration
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+    drop-first: false
+    contexts: ${LIQUIBASE_CONTEXTS:}
+  
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: none  # Let Liquibase handle schema creation
+    show-sql: ${SHOW_SQL:false}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+plaid:
+  client-id: ${PLAID_CLIENT_ID:}
+  secret: ${PLAID_SECRET:}
+  environment: ${PLAID_ENV:sandbox}
+  base-url: https://sandbox.plaid.com
+  default-access-token: ${PLAID_DEFAULT_ACCESS_TOKEN:}
+
+auth0:
+  domain: ${AUTH0_DOMAIN:alphabytes.us.auth0.com}
+  client-id: ${AUTH0_CLIENT_ID:gbg28ZjV0MZbXAgvPgfjP1AUxOE3HfxF}
+  redirect-uri: ${AUTH0_REDIRECT_URI:http://localhost:8080/app/budget/dashboard}
+  audience: ${AUTH0_AUDIENCE:https://alphabytes.us.auth0.com/api/v2/}
+
+app:
+  api:
+    base-url: ${API_BASE_URL:http://localhost:8090}
+    plaid-url: ${PLAID_API_URL:http://localhost:8090}
+  features:
+    enable-plaid: ${ENABLE_PLAID:true}
+    enable-reports: ${ENABLE_REPORTS:false}
+  ui:
+    name: ${APP_NAME:BudgetGuard}
+    theme:
+      primary-color: ${PRIMARY_COLOR:#667eea}
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:8080,https://budget-guard-app.vercel.app}
+  encryption:
+    password: ${ENCRYPTION_PASSWORD:}
+
+logging:
+  level:
+    com.example.paymentservice: ${LOG_LEVEL:INFO}
+    org.springframework.web.client.RestTemplate: ${REST_TEMPLATE_LOG_LEVEL:WARN}
+    org.springframework.http.client: ${HTTP_CLIENT_LOG_LEVEL:WARN}
+    org.springframework.security: ${SECURITY_LOG_LEVEL:WARN}
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+

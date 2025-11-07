@@ -1,0 +1,63 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Application
+application-local.yml
+application-secrets.yml
+
+# Security audit reports (should not be committed)
+SECURITY_AUDIT.md
+BACKEND_SECURITY_AUDIT.md
+SECURITY_IMPLEMENTATION_SUMMARY.md
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven (if used)
+target/
+
+# Gradle Wrapper (keep wrapper, ignore cache)
+.gradle/
+
+# Spring Boot
+spring-boot-*.log
+

@@ -1,0 +1,21 @@
+# Production configuration
+# Override with environment variables for sensitive values
+
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    com.example.paymentservice: INFO
+    org.springframework.web.client.RestTemplate: WARN
+    org.springframework.http.client: WARN
+    org.springframework.security: WARN
+    root: WARN
+
+# Production requires all secrets to be set via environment variables
+# No default values for sensitive data
+

@@ -1,0 +1,21 @@
+# Cloud deployment configuration
+# This profile is used when deploying to cloud platforms
+
+spring:
+  datasource:
+    # Support DATABASE_URL format (used by Railway, Render, Heroku)
+    url: ${DATABASE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}}
+    username: ${POSTGRES_USER:myuser}
+    password: ${POSTGRES_PASSWORD:mypassword}
+    driver-class-name: org.postgresql.Driver
+    # Parse DATABASE_URL if provided (format: postgresql://user:pass@host:port/dbname)
+    # Most platforms provide DATABASE_URL automatically
+
+server:
+  port: ${PORT:8090}  # Cloud platforms set PORT automatically
+
+logging:
+  level:
+    com.example.paymentservice: ${LOG_LEVEL:INFO}
+    root: ${LOG_LEVEL:INFO}
+

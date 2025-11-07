@@ -1,0 +1,9 @@
+databaseChangeLog:
+  # Version 1.0 - Initial schema
+  - include:
+      file: classpath:db/changelog/v1.0/001-create-users-table.sql
+  - include:
+      file: classpath:db/changelog/v1.0/002-create-plaid-tokens-table.sql
+  - include:
+      file: classpath:db/changelog/v1.0/003-create-transactions-table.sql
+

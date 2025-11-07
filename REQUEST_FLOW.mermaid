@@ -1,0 +1,77 @@
+sequenceDiagram
+    participant UI as Frontend (React)
+    participant Auth0 as Auth0 Service
+    participant PC as PlaidController
+    participant AS as Auth0Service
+    participant US as UserService
+    participant PS as PlaidService
+    participant UPTS as UserPlaidTokenService
+    participant DB as PostgreSQL
+    participant Plaid as Plaid API
+
+    Note over UI,Plaid: PHASE 1: Token Exchange (Connecting Bank Account)
+
+    UI->>Auth0: User Login
+    Auth0-->>UI: JWT Token (auth0_access_token)
+    
+    UI->>Plaid: Open Plaid Link Modal
+    Plaid-->>UI: public_token
+    
+    UI->>PC: POST /api/plaid/access-token/exchange<br/>{public_token, auth0_access_token}
+    
+    PC->>AS: validateTokenAndExtractUserId()
+    AS-->>PC: userId = "auth0|6909184b0bd9c60607317633"
+    
+    PC->>US: getOrCreateUserFromToken(auth0Token)
+    US->>DB: Check if user exists
+    DB-->>US: User found/created
+    US-->>PC: User entity
+    
+    PC->>PS: exchangePublicToken(public_token)
+    PS->>Plaid: POST /item/public_token/exchange
+    Plaid-->>PS: {access_token, item_id}
+    PS-->>PC: ExchangeTokenResponse
+    
+    PC->>PS: getAccounts(access_token)
+    PS->>Plaid: POST /accounts/get
+    Plaid-->>PS: {accounts, item: {institution_id}}
+    PS-->>PC: institution_id = "ins_13"
+    
+    PC->>UPTS: storePlaidTokenForUser(userId, access_token, item_id, institution_id)
+    UPTS->>DB: INSERT INTO plaid_access_tokens<br/>(encrypted token stored)
+    DB-->>UPTS: Token saved
+    UPTS-->>PC: Success
+    
+    PC-->>UI: HTTP 200 OK<br/>{access_token, item_id}
+    
+    Note over UI,Plaid: PHASE 2: Fetch User Accounts (Settings Page)
+
+    UI->>PC: POST /api/user/accounts<br/>{auth0AccessToken}
+    
+    PC->>AS: validateTokenAndExtractUserId()
+    AS-->>PC: userId = "auth0|6909184b0bd9c60607317633"
+    
+    PC->>US: getOrCreateUserFromToken(auth0Token)
+    US->>DB: Get user
+    DB-->>US: User entity
+    US-->>PC: User entity
+    
+    PC->>UPTS: getAllPlaidAccessTokensForUser(userId)
+    UPTS->>DB: SELECT * FROM plaid_access_tokens<br/>WHERE user_id = ...
+    DB-->>UPTS: Found 1 token
+    UPTS->>UPTS: Decrypt access_token
+    UPTS-->>PC: List of decrypted tokens
+    
+    loop For each token
+        PC->>PS: getAccounts(decrypted_token)
+        PS->>Plaid: POST /accounts/get
+        Plaid-->>PS: {accounts, item}
+        PS-->>PC: AccountsGetResponse
+    end
+    
+    PC->>PC: Aggregate accounts<br/>Add institution icon URLs
+    PC-->>UI: HTTP 200 OK<br/>{accounts, items, total_accounts}
+    
+    UI->>UI: Display accounts in Settings page<br/>with institution icons
+
+
