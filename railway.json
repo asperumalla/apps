@@ -5,7 +5,7 @@
     "buildCommand": "./gradlew clean build -x test --no-daemon"
   },
   "deploy": {
-    "startCommand": "./start.sh",
+    "startCommand": "sh -c 'JAR=$(find build/libs -name \"payment-service-*.jar\" ! -name \"*-plain.jar\" | head -1) && java -jar \"$JAR\"'",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
