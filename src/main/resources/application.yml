@@ -25,6 +25,8 @@ spring:
     enabled: true
     drop-first: false
     contexts: ${LIQUIBASE_CONTEXTS:}
+    # Don't fail startup if database connection fails (allows health checks to work)
+    fail-on-error: false
   
   # JPA configuration
   jpa:
