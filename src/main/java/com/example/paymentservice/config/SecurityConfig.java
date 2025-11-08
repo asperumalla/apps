@@ -74,7 +74,26 @@ public class SecurityConfig {
         
         // Parse allowed origins from environment variable or config
         List<String> origins = Arrays.asList(allowedOrigins.split(","));
-        configuration.setAllowedOrigins(origins);
+        
+        // Filter out wildcard patterns and handle them separately
+        List<String> exactOrigins = new java.util.ArrayList<>();
+        List<String> wildcardPatterns = new java.util.ArrayList<>();
+        
+        for (String origin : origins) {
+            origin = origin.trim();
+            if (origin.contains("*")) {
+                wildcardPatterns.add(origin);
+            } else {
+                exactOrigins.add(origin);
+            }
+        }
+        
+        configuration.setAllowedOrigins(exactOrigins);
+        
+        // Handle wildcard patterns using allowedOriginPatterns (Spring Boot 2.4+)
+        if (!wildcardPatterns.isEmpty()) {
+            configuration.setAllowedOriginPatterns(wildcardPatterns);
+        }
         
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
