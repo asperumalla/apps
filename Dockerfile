@@ -3,9 +3,10 @@ FROM eclipse-temurin:17-jdk-alpine AS build
 
 WORKDIR /app
 
-# Copy Gradle files
+# Copy Gradle wrapper files first (must be before build)
 COPY gradlew .
-COPY gradle gradle
+COPY gradle/wrapper/gradle-wrapper.jar gradle/wrapper/gradle-wrapper.jar
+COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/gradle-wrapper.properties
 COPY build.gradle .
 COPY settings.gradle .
 
