@@ -61,7 +61,7 @@ app:
     theme:
       primary-color: ${PRIMARY_COLOR:#667eea}
   cors:
-    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:8080,https://budget-guard-app.vercel.app}
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:8080,https://budget-guard-app.vercel.app,https://*.vercel.app}
   encryption:
     password: ${ENCRYPTION_PASSWORD:}
 
