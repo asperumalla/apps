@@ -52,6 +52,7 @@ public class ConfigController {
     @GetMapping
     public ResponseEntity<ConfigResponse> getConfig() {
         log.debug("Providing configuration to frontend");
+        log.debug("Providing configuration to frontend");
         
         ConfigResponse config = ConfigResponse.builder()
                 .auth0(ConfigResponse.Auth0Config.builder()

@@ -10,14 +10,14 @@ spring:
       write-dates-as-timestamps: false
   
   # Database configuration
-  # Supports both DATABASE_URL (cloud platforms) and individual variables
+  # DATABASE_URL is handled by DatabaseConfig.java which parses postgresql:// format
+  # Individual variables are fallback if DATABASE_URL is not provided
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}}
+    # These will be overridden by DatabaseConfig if DATABASE_URL is present
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}
     username: ${POSTGRES_USER:myuser}
     password: ${POSTGRES_PASSWORD:mypassword}
     driver-class-name: org.postgresql.Driver
-    # Note: If DATABASE_URL is provided (format: postgresql://user:pass@host:port/dbname),
-    # Spring Boot will parse it automatically. Individual variables are fallback.
   
   # Liquibase configuration
   liquibase:
