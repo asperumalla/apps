@@ -24,8 +24,8 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Copy the JAR from build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+# Copy the JAR from build stage (use explicit name to avoid wildcard issues)
+COPY --from=build /app/build/libs/payment-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose port (can be overridden by platform)
 EXPOSE 8090
