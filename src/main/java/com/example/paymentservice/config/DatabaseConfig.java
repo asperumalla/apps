@@ -42,6 +42,10 @@ public class DatabaseConfig {
         DataSourceBuilder<?> builder = DataSourceBuilder.create();
         builder.driverClassName("org.postgresql.Driver");
 
+        // Log what we're getting
+        log.info("DATABASE_URL value: {}", databaseUrl != null && !databaseUrl.isEmpty() ? "SET (length: " + databaseUrl.length() + ")" : "NOT SET");
+        log.info("POSTGRES_HOST: {}, POSTGRES_PORT: {}, POSTGRES_DB: {}", postgresHost, postgresPort, postgresDb);
+
         // If DATABASE_URL is provided, parse it
         if (databaseUrl != null && !databaseUrl.isEmpty() && databaseUrl.startsWith("postgresql://")) {
             try {

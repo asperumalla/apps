@@ -12,9 +12,9 @@ spring:
   # Database configuration
   # DATABASE_URL is handled by DatabaseConfig.java which parses postgresql:// format
   # Individual variables are fallback if DATABASE_URL is not provided
+  # Note: DatabaseConfig.java provides the DataSource bean, so these are only used as fallback
   datasource:
-    # These will be overridden by DatabaseConfig if DATABASE_URL is present
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}
+    url: ${DATABASE_URL:jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:mydb}}
     username: ${POSTGRES_USER:myuser}
     password: ${POSTGRES_PASSWORD:mypassword}
     driver-class-name: org.postgresql.Driver
@@ -25,7 +25,6 @@ spring:
     enabled: true
     drop-first: false
     contexts: ${LIQUIBASE_CONTEXTS:}
-    # Don't fail startup if database connection fails (allows health checks to work)
   
   # JPA configuration
   jpa:
